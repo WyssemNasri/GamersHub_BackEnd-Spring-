@@ -1,7 +1,10 @@
 package com.example.gamershub.securityconfig;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
@@ -16,10 +19,10 @@ public class JwtUtil  {
     
         public String generateToken(String username) {
             return Jwts.builder()
-                    .subject(username)  // Using the new 'subject' method
-                    .issuedAt(new Date())  // Using the new 'issuedAt' method
-
-                    .signWith(SECRET_KEY)  // Directly passing the key without the SignatureAlgorithm
+                    .subject(username)  
+                    .issuedAt(new Date())  
+                    .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) 
+                    .signWith(SECRET_KEY) 
                     .compact();
         }
 }

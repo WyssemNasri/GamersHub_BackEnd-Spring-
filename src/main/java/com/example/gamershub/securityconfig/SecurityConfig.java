@@ -14,15 +14,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/user/registerUser" , "/auth/login").permitAll()
-                                .anyRequest().authenticated()
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        return http.build();
-    } 
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/user/registerUser", "/auth/login").permitAll()
+                    .requestMatchers("/post/statue").permitAll() // 🔹 Autoriser ce endpoint
+                    .requestMatchers(org.springframework.http.HttpMethod.POST, "/post/statue").permitAll() // 🔹 Spécifier POST
+                    .anyRequest().authenticated()
+            )
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    return http.build();
+}
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
