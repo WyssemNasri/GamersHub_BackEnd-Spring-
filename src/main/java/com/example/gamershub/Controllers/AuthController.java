@@ -6,7 +6,6 @@ import com.example.gamershub.Services.AuthService;
 import com.example.gamershub.dto.AuthRequest;
 import com.example.gamershub.dto.AuthResponse;
 import com.example.gamershub.entity.User;
-
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -20,10 +19,11 @@ public class AuthController {
         if (token != null) {
             User user = authService.getUserByEmail(authRequest.getEmail());
             if (user != null) {
-                AuthResponse authResponse = new AuthResponse(token);
+                AuthResponse authResponse = new AuthResponse(token, String.valueOf(user.getId()));  // Conversion explicite du long en String
                 return ResponseEntity.ok(authResponse);
             }
         }
         return ResponseEntity.status(401).body("Email ou mot de passe incorrect");
     }
 }
+
