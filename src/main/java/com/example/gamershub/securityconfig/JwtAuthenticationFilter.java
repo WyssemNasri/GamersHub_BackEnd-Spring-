@@ -45,18 +45,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             User user = userService.getUserByEmail(email);
     
             if (user != null && jwtUtil.validateToken(token, user)) {
-                // Create Authentication object with the User entity as principal
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
                         user, 
                         null, 
-                        new ArrayList<>()  // No authorities if you're not using roles
+                        new ArrayList<>()  
                 );
     
-                // Cast to UsernamePasswordAuthenticationToken to access setDetails method
                 ((UsernamePasswordAuthenticationToken) authentication)
                         .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
     
-                // Set Authentication object into the SecurityContext
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }

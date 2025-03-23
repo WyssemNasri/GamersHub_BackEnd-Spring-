@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/post")
@@ -21,6 +22,11 @@ public class PostController {
     public PostController(PostService postService, ObjectMapper objectMapper) {
         this.postService = postService;
         this.objectMapper = objectMapper;
+    }
+
+    @GetMapping("/statueUser/{user_id}")
+    public ResponseEntity<List<Post>> fetchUserPosts(@PathVariable Long user_id) {
+        return ResponseEntity.ok(postService.fetchUserPosts(user_id));
     }
 
     @PostMapping(value = "/statue", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -38,4 +44,10 @@ public class PostController {
             return ResponseEntity.internalServerError().body(null);
         }
     }
+
+
+    
+
+
+
 }

@@ -22,6 +22,8 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes());
     }
 
+
+    //fonction pour genérer token avec email 
     public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
@@ -30,6 +32,8 @@ public class JwtUtil {
                 .signWith(getSecretKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
+    //fonction pour extract id de l'utilisateur avec token 
     public Long extractId(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
@@ -38,14 +42,13 @@ public class JwtUtil {
                     .parseClaimsJws(token)
                     .getBody();
             
-            // Assuming the ID is stored as a claim called "id"
             return claims.get("id", Long.class);
         } catch (Exception e) {
-            return null; // Handle exception as needed
+            return null; 
         }
     }
     
-
+    //fonction pour extract nom utilisateur  avec token 
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSecretKey())

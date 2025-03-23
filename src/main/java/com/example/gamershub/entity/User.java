@@ -1,8 +1,9 @@
 package com.example.gamershub.entity;
+
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Date;
 import org.hibernate.annotations.CreationTimestamp;
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "User")
@@ -33,15 +34,21 @@ public class User {
     @Column(name = "Token")
     private String token;
 
+    @Column(name = "profilePicture", columnDefinition = "TEXT") 
+    private String profilePicture; 
+
+    @Column(name = "coverPicture", columnDefinition = "TEXT") 
+    private String coverPicture; 
+
     @CreationTimestamp
     @Column(name = "createdAt", updatable = false)
     private LocalDateTime createdAt;
 
-    // Constructor
     public User() {}
 
     public User(long id, String email, String password, String firstName, String lastName, 
-                String phoneNumber, Date dayOfBirth, String token, LocalDateTime createdAt) {
+                String phoneNumber, Date dayOfBirth, String token, String profilePicture, 
+                String coverPicture, LocalDateTime createdAt) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -50,10 +57,12 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.dayOfBirth = dayOfBirth;
         this.token = token;
+        this.profilePicture = profilePicture;
+        this.coverPicture = coverPicture;
         this.createdAt = createdAt;
     }
 
-    // Getters and Setters
+
     public long getId() {
         return id;
     }
@@ -116,6 +125,22 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public String getCoverPicture() {
+        return coverPicture;
+    }
+
+    public void setCoverPicture(String coverPicture) {
+        this.coverPicture = coverPicture;
     }
 
     public LocalDateTime getCreatedAt() {

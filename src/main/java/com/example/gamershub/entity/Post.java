@@ -2,6 +2,9 @@ package com.example.gamershub.entity;
 
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +17,7 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false) 
+    @JsonIgnore  
     private User user;
 
     @Column(name = "description", nullable = false)
@@ -21,6 +25,7 @@ public class Post {
 
     @Column(name = "url_media")
     private String urlMedia; 
+
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -31,9 +36,8 @@ public class Post {
     public Post(String description, String urlMedia) {
         this.description = description;
         this.urlMedia = urlMedia;
-    }
 
-    // Getters et Setters
+    }
     public Long getId() {
         return id;
     }

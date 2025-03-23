@@ -19,11 +19,13 @@ public class AuthController {
         if (token != null) {
             User user = authService.getUserByEmail(authRequest.getEmail());
             if (user != null) {
-                AuthResponse authResponse = new AuthResponse(token, String.valueOf(user.getId()));  // Conversion explicite du long en String
+                AuthResponse authResponse = new AuthResponse(token, String.valueOf(user.getId()));  
                 return ResponseEntity.ok(authResponse);
             }
         }
         return ResponseEntity.status(401).body("Email ou mot de passe incorrect");
     }
+
 }
+
 
