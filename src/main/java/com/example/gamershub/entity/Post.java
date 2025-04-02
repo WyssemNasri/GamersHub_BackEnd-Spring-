@@ -1,8 +1,11 @@
 package com.example.gamershub.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.example.gamershub.dto.FriendDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -17,15 +20,14 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false) 
-    @JsonIgnore  
-    private User user;
+    @JsonIgnore
+    private User user ; 
 
     @Column(name = "description", nullable = false)
     private String description; 
 
     @Column(name = "url_media")
     private String urlMedia; 
-
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -47,10 +49,10 @@ public class Post {
     }
 
     public User getUser() {
-        return user;
+        return user; // Return the User entity
     }
 
-    public void setUser(User user) {
+    public void setUser(User user) { // Accept User entity
         this.user = user;
     }
 
@@ -73,4 +75,11 @@ public class Post {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+    public FriendDTO getUserDTO() {
+        if (this.user != null) {
+            return new FriendDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getProfilePicture());
+        }
+        return null;
+    }
+ 
 }

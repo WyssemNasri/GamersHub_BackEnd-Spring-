@@ -1,9 +1,12 @@
 package com.example.gamershub.Controllers;
-
 import com.example.gamershub.Services.PostService;
 import com.example.gamershub.dto.PostRequest;
+
 import com.example.gamershub.entity.Post;
+import com.example.gamershub.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +48,7 @@ public class PostController {
         }
     }
 
+    
 
     
 

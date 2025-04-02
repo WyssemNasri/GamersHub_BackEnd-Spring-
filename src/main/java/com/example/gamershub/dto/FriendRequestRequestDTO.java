@@ -1,6 +1,6 @@
 package com.example.gamershub.dto;
 
-public class FriendRequestRequestDTO  {
+public class FriendRequestRequestDTO {
     private Long senderId;
     private Long receiverId;
     

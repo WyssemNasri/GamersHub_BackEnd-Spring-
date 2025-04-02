@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.example.gamershub.dto.FriendDTO;
+
 @Entity
 @Table(name = "User")
 public class User {
@@ -60,6 +62,12 @@ public class User {
         this.profilePicture = profilePicture;
         this.coverPicture = coverPicture;
         this.createdAt = createdAt;
+    }
+
+    public FriendDTO toFriendDTO(User user){
+
+        FriendDTO frienddto = new FriendDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getProfilePicture()) ; 
+        return frienddto  ;
     }
 
 

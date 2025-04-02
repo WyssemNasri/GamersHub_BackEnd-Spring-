@@ -2,9 +2,11 @@ package com.example.gamershub.Services;
 
 import com.example.gamershub.Respositroys.PostRepository;
 import com.example.gamershub.Respositroys.UserRepository;
+import com.example.gamershub.dto.FriendDTO;
 import com.example.gamershub.dto.PostRequest;
 import com.example.gamershub.entity.Post;
 import com.example.gamershub.entity.User;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,20 +14,25 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
 
+
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final FriendshipService friendshipService;
 
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, FriendshipService friendshipService) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.friendshipService = friendshipService;
     }
 
     public List<Post> fetchUserPosts(Long userId) {
@@ -57,6 +64,4 @@ public class PostService {
 
         return postRepository.save(post);
     }
-
-    
 }

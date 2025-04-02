@@ -14,6 +14,7 @@ public class FriendRequestController {
     @Autowired
     private FriendRequestService friendRequestService;
     @PostMapping("/sendRequest")
+    
 public ResponseEntity<String> sendFriendRequest(@RequestBody FriendRequestRequestDTO requestDTO) {
     try {
         User sender = new User(); 
