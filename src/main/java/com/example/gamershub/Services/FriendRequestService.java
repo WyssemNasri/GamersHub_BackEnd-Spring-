@@ -23,6 +23,9 @@ public class FriendRequestService {
         this.friendRequestRepository = friendRequestRepository;
     }
 
+
+    //fonction pour envoyer une demande d'ami
+
     public FriendRequest sendFriendRequest(User sender, User receiver) {
         Optional<FriendRequest> existingRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver);
         if (existingRequest.isPresent()) {
@@ -32,6 +35,7 @@ public class FriendRequestService {
         return friendRequestRepository.save(friendRequest);
     }
 
+    //fonction pour obtenir les demandes d'ami envoyées
     public List<FriendRequest> getSentFriendRequests(User sender) {
         return friendRequestRepository.findBySenderAndStatus(sender, "PENDING");
     }

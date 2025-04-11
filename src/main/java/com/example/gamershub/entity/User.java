@@ -1,6 +1,10 @@
 package com.example.gamershub.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,6 +12,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.example.gamershub.dto.FriendDTO;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "User")
 public class User {
 
@@ -46,8 +53,6 @@ public class User {
     @Column(name = "createdAt", updatable = false)
     private LocalDateTime createdAt;
 
-    public User() {}
-
     public User(long id, String email, String password, String firstName, String lastName, 
                 String phoneNumber, Date dayOfBirth, String token, String profilePicture, 
                 String coverPicture, LocalDateTime createdAt) {
@@ -71,61 +76,7 @@ public class User {
     }
 
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Date getDayOfBirth() {
-        return dayOfBirth;
-    }
-
-    public void setDayOfBirth(Date dayOfBirth) {
-        this.dayOfBirth = dayOfBirth;
-    }
+    
 
     public String getToken() {
         return token;
@@ -133,29 +84,5 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
-    public String getCoverPicture() {
-        return coverPicture;
-    }
-
-    public void setCoverPicture(String coverPicture) {
-        this.coverPicture = coverPicture;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
     }
 }

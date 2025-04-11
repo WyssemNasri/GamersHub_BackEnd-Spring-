@@ -1,7 +1,7 @@
 package com.example.gamershub.Controllers;
 import com.example.gamershub.Services.PostService;
 import com.example.gamershub.dto.PostRequest;
-
+import com.example.gamershub.entity.Comment;
 import com.example.gamershub.entity.Post;
 import com.example.gamershub.entity.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,6 +47,38 @@ public class PostController {
             return ResponseEntity.internalServerError().body(null);
         }
     }
+    @PostMapping("/like")
+    public ResponseEntity<String> likePost(@RequestParam Long userId, @RequestParam Long postId) {
+        try {
+            postService.likePost(userId, postId);
+            return ResponseEntity.ok("Post liked successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<Comment> addComment(
+            @RequestParam Long postId,      // ID du post
+            @RequestParam Long userId,      // ID de l'utilisateur
+            @RequestParam String content) { // Contenu du commentaire
+        try {
+            Comment comment = postService.addComment(postId, userId, content);
+            return ResponseEntity.ok(comment);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @GetMapping("/videos")
+    public ResponseEntity<List<Post>> fetchVideoPosts() {
+        List<Post> videoPosts = postService.fetchVideoPosts();
+        return ResponseEntity.ok(videoPosts);
+    }
+    
+
+
+    
 
     
 

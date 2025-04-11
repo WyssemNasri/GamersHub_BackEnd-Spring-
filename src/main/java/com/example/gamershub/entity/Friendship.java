@@ -8,6 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 public class Friendship {
     @Id
@@ -26,14 +33,8 @@ public class Friendship {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Friendship() {}
-
     public Friendship(User sender, User receiver) {
         this.sender = sender;
         this.receiver = receiver;
     }
-
-    public Long getId() { return id; }
-    public User getSender() { return sender; }
-    public User getReceiver() { return receiver; }
 }
