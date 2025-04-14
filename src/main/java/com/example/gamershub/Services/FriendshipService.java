@@ -26,20 +26,12 @@ public class FriendshipService {
     @Autowired
     CommentService commentService;
 
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private FriendshipRepository friendshipRepository;
 
     @Autowired
     private PostRepository postRepository;
-
-    @Autowired
-    private LikeRepository likeRepository; 
-
-    @Autowired
-    private CommentRepository commentRepository;
 
     public List<FriendDTO> getFriends(User user) {
         List<Friendship> friendships = friendshipRepository.findBySenderOrReceiver(user, user);
@@ -72,16 +64,15 @@ public class FriendshipService {
                 // Récupérer les commentaires du post
                 List<Comment> comments = commentService.getCommentsByPostId(post.getId());
                 post.setComments(comments);
+
+                // Récupérer le nombre de commentaires
+                int commentCount = comments.size();  // Nombre de commentaires
+                post.setCommentCount(commentCount);
     
                 // Récupérer le nombre de likes
                 int likeCount = likeService.getLikesByPost(post.getId()).size();  // Nombre de likes
                 post.setLikeCount(likeCount);
-    
-                // Récupérer les utilisateurs qui ont liké le post (avec FriendDTO)
-                List<FriendDTO> usersWhoLiked = likeService.getUsersWhoLikedPost(post.getId());
-                post.setUsersWhoLiked(usersWhoLiked);
-    
-                // Ajouter l'utilisateur propriétaire du post (utilisation de FriendDTO ici si nécessaire)
+        
                 User postOwner = post.getUser();
                 FriendDTO postOwnerDTO = postOwner.toFriendDTO(user);  // Utilisation de la méthode pour convertir User en FriendDTO
                 post.setUserDTO(postOwnerDTO);  // Assurez-vous que setUserDTO est une méthode valide dans Post

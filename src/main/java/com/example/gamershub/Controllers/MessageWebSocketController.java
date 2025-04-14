@@ -83,6 +83,5 @@ public ResponseEntity<List<Map<String, Object>>> getLastMessages(@PathVariable L
     return ResponseEntity.ok(lastMessages);
 }
 
-
     
 }

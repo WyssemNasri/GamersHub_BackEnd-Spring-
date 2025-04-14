@@ -10,6 +10,7 @@ import java.util.Optional;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.gamershub.dto.FriendDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Getter
 @Setter
 @Entity
@@ -24,16 +25,13 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User user; 
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
     @Column(name = "content", nullable = false)
     private String content;
-    
-
-
-
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

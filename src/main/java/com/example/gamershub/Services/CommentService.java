@@ -41,10 +41,4 @@ public class CommentService {
 }
 
 // Retourner tous les commentaires d'un post (avec user et content)
-public List<Comment> getCommentsByPost(Long postId) {
-    return commentRepository.findByPostId(postId);
-}
-
-
-
 }

@@ -1,5 +1,8 @@
 package com.example.gamershub.entity;
 
+import com.example.gamershub.dto.FriendDTO;
+import com.example.gamershub.dto.FriendRequestResponseDTO;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -60,6 +63,20 @@ public class FriendRequest {
     public User getReceiver() {
         return receiver;
     }
+    public FriendDTO recevFriendDTO (){
+            FriendDTO frienddto = new FriendDTO(receiver.getId(), receiver.getFirstName(), receiver.getLastName(), receiver.getProfilePicture()) ; 
+            return frienddto  ;
+        }
+    public FriendRequestResponseDTO toSentDTO() {
+    FriendDTO receiverDTO = new FriendDTO(receiver.getId(), receiver.getFirstName(), receiver.getLastName(), receiver.getProfilePicture());
+    return new FriendRequestResponseDTO(id, receiverDTO, status.name());
+}
+
+public FriendRequestResponseDTO toReceivedDTO() {
+    FriendDTO senderDTO = new FriendDTO(sender.getId(), sender.getFirstName(), sender.getLastName(), sender.getProfilePicture());
+    return new FriendRequestResponseDTO(id, senderDTO, status.name());
+}
+
 
     public void setReceiver(User receiver) {
         this.receiver = receiver;
@@ -72,4 +89,6 @@ public class FriendRequest {
     public void setStatus(RequestStatus status) {
         this.status = status;
     }
+
+    
 }

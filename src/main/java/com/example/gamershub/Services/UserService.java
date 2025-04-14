@@ -68,6 +68,7 @@ public class UserService {
         updateCoverPicUrl(userId, coverPicName);
         return coverPicName; // Retourne uniquement le nom du fichier
     }
+
     
     private String saveFile(MultipartFile file, String directoryPath) throws IOException {
         File dir = new File(directoryPath);

@@ -28,10 +28,10 @@ public class Post {
 
     @Column(name = "url_media")
     private String urlMedia;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     private List<Like> likes;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     private List<Comment> comments;
 
@@ -107,6 +107,9 @@ public class Post {
 
     public List<Comment> getComments() {
         return comments;
+    }
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
     }
 
     public void setComments(List<Comment> comments) {

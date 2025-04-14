@@ -76,6 +76,9 @@ public class User {
     }
 
 
+    public String getUsername() {
+        return this.firstName + " " + this.lastName;
+    }
     
 
     public String getToken() {

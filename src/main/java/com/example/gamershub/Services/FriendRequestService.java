@@ -2,6 +2,7 @@ package com.example.gamershub.Services;
 
 import com.example.gamershub.Respositroys.FriendRequestRepository;
 import com.example.gamershub.Respositroys.FriendshipRepository;
+import com.example.gamershub.dto.NotificationDTO;
 import com.example.gamershub.entity.FriendRequest;
 import com.example.gamershub.entity.Friendship;
 import com.example.gamershub.entity.User;
@@ -15,6 +16,8 @@ import java.util.Optional;
 public class FriendRequestService {
     @Autowired
     private FriendshipRepository friendshipRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private final FriendRequestRepository friendRequestRepository;
@@ -54,28 +57,48 @@ public class FriendRequestService {
         if (requestOpt.isEmpty()) {
             throw new IllegalStateException("Friend request not found");
         }
-
+    
         FriendRequest request = requestOpt.get();
         if (request.getStatus() != FriendRequest.RequestStatus.PENDING) {
             throw new IllegalStateException("Friend request is already processed");
         }
-
+    
         // Mettre à jour le statut de la demande d'ami
         request.setStatus(FriendRequest.RequestStatus.ACCEPTED);
         friendRequestRepository.save(request);
-
+    
         // Vérifier si l'amitié existe déjà
         if (friendshipRepository.existsBySenderAndReceiver(request.getSender(), request.getReceiver()) ||
             friendshipRepository.existsBySenderAndReceiver(request.getReceiver(), request.getSender())) {
             throw new IllegalStateException("Friendship already exists");
         }
-
+    
         // Enregistrer l'amitié dans la table Friendship
         Friendship friendship = new Friendship(request.getSender(), request.getReceiver());
         friendshipRepository.save(friendship);
 
+    
         return request;
     }
+    
+    private void createFriendRequestNotification(FriendRequest request) {
+        String senderName = request.getSender().getFirstName(); // Récupère le prénom de l'utilisateur qui a envoyé la demande
+        String receiverName = request.getReceiver().getFirstName(); // Récupère le prénom de l'utilisateur qui accepte la demande
+    
+        // Créer une notification (exemple)
+        NotificationDTO notification = new NotificationDTO();
+        notification.setSenderUsername(senderName);
+        notification.setReceiverUsername(receiverName);
+        notification.setMessage(receiverName + " a accepté votre demande d'ami");
+        notification.setType("FriendRequestAccepted");
+    
+        // Appeler ton service de notification pour envoyer la notification
+        notificationService.sendNotification(notification);
+    }
+    
+
+
+
 
 
     // Refuser une demande d'ami

@@ -1,6 +1,7 @@
 package com.example.gamershub.Controllers;
 import com.example.gamershub.Services.FriendRequestService;
 import com.example.gamershub.dto.FriendRequestRequestDTO;
+import com.example.gamershub.dto.FriendRequestResponseDTO;
 import com.example.gamershub.entity.FriendRequest;
 import com.example.gamershub.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,22 +31,32 @@ public ResponseEntity<String> sendFriendRequest(@RequestBody FriendRequestReques
     }
 }
 
-    @GetMapping("/sent/{userId}")
-    public ResponseEntity<List<FriendRequest>> getSentFriendRequests(@PathVariable Long userId) {
-        User user = new User();
-        user.setId(userId);
+@GetMapping("/sent/{userId}")
+public ResponseEntity<List<FriendRequestResponseDTO>> getSentFriendRequests(@PathVariable Long userId) {
+    User user = new User();
+    user.setId(userId);
 
-        List<FriendRequest> requests = friendRequestService.getReceivedFriendRequests(user);
-        return ResponseEntity.ok(requests);
-    }
-    @GetMapping("/received/{userId}")
-    public ResponseEntity<List<FriendRequest>> getReceivedFriendRequests(@PathVariable Long userId) {
-        User user = new User();
-        user.setId(userId);
+    List<FriendRequest> requests = friendRequestService.getSentFriendRequests(user);
+    List<FriendRequestResponseDTO> dtos = requests.stream()
+            .map(FriendRequest::toSentDTO)
+            .toList();
 
-        List<FriendRequest> requests = friendRequestService.getReceivedFriendRequests(user);
-        return ResponseEntity.ok(requests);
-    }
+    return ResponseEntity.ok(dtos);
+}
+
+@GetMapping("/received/{userId}")
+public ResponseEntity<List<FriendRequestResponseDTO>> getReceivedFriendRequests(@PathVariable Long userId) {
+    User user = new User();
+    user.setId(userId);
+
+    List<FriendRequest> requests = friendRequestService.getReceivedFriendRequests(user);
+    List<FriendRequestResponseDTO> dtos = requests.stream()
+            .map(FriendRequest::toReceivedDTO)
+            .toList();
+
+    return ResponseEntity.ok(dtos);
+}
+
     @GetMapping("/status")
     public ResponseEntity<FriendRequest.RequestStatus> getFriendRequestStatus(
             @RequestParam Long senderId, 
