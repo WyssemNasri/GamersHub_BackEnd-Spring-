@@ -1,14 +1,9 @@
 package com.example.gamershub.Services;
-
-import com.example.gamershub.Respositroys.CommentRepository;
 import com.example.gamershub.Respositroys.FriendshipRepository;
-import com.example.gamershub.Respositroys.LikeRepository;
 import com.example.gamershub.Respositroys.PostRepository;
-import com.example.gamershub.Respositroys.UserRepository;
 import com.example.gamershub.dto.FriendDTO;
 import com.example.gamershub.entity.Comment;
 import com.example.gamershub.entity.Friendship;
-import com.example.gamershub.entity.Like;
 import com.example.gamershub.entity.Post;
 import com.example.gamershub.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +47,6 @@ public class FriendshipService {
     }
 
     public List<Post> getFriendsPosts(User user) {
-        // Obtenir les amis de l'utilisateur sous forme de FriendDTO
         List<FriendDTO> friends = getFriends(user); // Assurez-vous que cette méthode renvoie des FriendDTO
         List<Post> friendsPosts = new ArrayList<>();
     

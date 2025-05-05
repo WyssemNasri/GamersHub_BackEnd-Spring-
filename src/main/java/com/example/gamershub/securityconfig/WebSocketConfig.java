@@ -1,25 +1,25 @@
 package com.example.gamershub.securityconfig;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    // Configuration des canaux de communication
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic", "/queue"); // Pour envoyer les messages aux clients
-        config.setApplicationDestinationPrefixes("/app"); // Pour recevoir les messages des clients
+        config.enableSimpleBroker("/topic", "/queue"); // Pour envoyer vers le client
+        config.setApplicationDestinationPrefixes("/app"); // Pour recevoir du client
+        config.setUserDestinationPrefix("/user"); // Pour messages privés
     }
 
-    // Endpoint de connexion WebSocket
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS(); // Sans SockJS
+        // registry.addEndpoint("/ws").setAllowedOriginPatterns("*").withSockJS(); // (si Flutter utilise SockJS)
     }
+
+
+
 }

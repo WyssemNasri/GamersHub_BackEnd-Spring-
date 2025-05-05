@@ -1,20 +1,34 @@
-package com.example.gamershub.Respositroys;
+    package com.example.gamershub.Respositroys;
 
-import com.example.gamershub.entity.Message;
-import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.List;
-import java.util.Optional;
+    import com.example.gamershub.entity.Message;
+    import org.springframework.data.jpa.repository.JpaRepository;
+    import org.springframework.data.jpa.repository.Query;
+    import org.springframework.data.repository.query.Param;
 
-// Interface pour gérer les opérations avec la table Message
-public interface MessageRepository extends JpaRepository<Message, Long> {
+    import java.util.List;
+    import java.util.Optional;
 
-    // Récupérer tous les messages entre 2 utilisateurs triés par date croissante
-    List<Message> findBySenderIdAndReceiverIdOrderByCreatedAtAsc(Long senderId, Long receiverId);
+    public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    // Récupérer le dernier message échangé entre 2 utilisateurs
-    Message findTopBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByCreatedAtDesc(
-            Long senderId1, Long receiverId1, Long senderId2, Long receiverId2
-    );
-    Optional<Message> findTopBySenderIdAndReceiverIdOrderByCreatedAtDesc(Long senderId, Long receiverId);
+        List<Message> findBySenderIdAndReceiverIdOrderByCreatedAtAsc(Long senderId, Long receiverId);
+        Message findTopBySenderIdAndReceiverIdOrSenderIdAndReceiverIdOrderByCreatedAtDesc(
+                Long senderId1, Long receiverId1, Long senderId2, Long receiverId2
+        );
+        List<Message> findBySenderIdAndReceiverIdOrReceiverIdAndSenderIdOrderByCreatedAtDesc(Long senderId, Long receiverId, Long senderId2, Long receiverId2);
 
-}
+        Optional<Message> findTopBySenderIdAndReceiverIdOrderByCreatedAtDesc(Long senderId, Long receiverId);
+        @Query("""
+        SELECT m FROM Message m 
+        WHERE (m.sender.id = :userId AND m.receiver.id = :friendId)
+        OR (m.sender.id = :friendId AND m.receiver.id = :userId)
+        ORDER BY m.createdAt DESC LIMIT 1
+    """)
+    Optional<Message> findLastMessageBetweenUsers(@Param("userId") Long userId, @Param("friendId") Long friendId);
+
+    List<Message> findBySenderIdAndReceiverIdOrReceiverIdAndSenderIdOrderByCreatedAtAsc(
+    Long senderId1, Long receiverId1, Long senderId2, Long receiverId2
+);
+
+
+
+    }

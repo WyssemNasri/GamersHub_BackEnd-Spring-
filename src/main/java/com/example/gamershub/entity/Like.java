@@ -1,5 +1,7 @@
 package com.example.gamershub.entity;
 import com.example.gamershub.dto.FriendDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,7 +27,7 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;

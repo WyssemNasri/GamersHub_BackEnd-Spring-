@@ -6,6 +6,8 @@ import com.example.gamershub.dto.NotificationDTO;
 import com.example.gamershub.entity.Notification;
 import com.example.gamershub.entity.User;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -24,35 +26,58 @@ public class NotificationService {
     private SimpMessagingTemplate messagingTemplate;
 
     /**
-     * Envoie une notification d'un utilisateur vers un autre.
-     * Sauvegarde la notification en base de donn es et envoie
-     * une notification via WebSocket uniquement des donn es utiles,
-     *   savoir le type, le message, l'exp diteur et le destinataire.
-     * @param dto Les donn es de la notification  envoyer.
+     * Enregistre la notification dans la base de données.
      */
     @Transactional
-public void sendNotification(NotificationDTO dto) {
-    User sender = userRepository.findById(dto.getSenderId())
-            .orElseThrow(() -> new RuntimeException("Sender not found"));
+    public Notification saveNotification(NotificationDTO dto) {
+        User sender = userRepository.findById(dto.getSenderId())
+                .orElseThrow(() -> new RuntimeException("Sender not found"));
 
-    User receiver = userRepository.findById(dto.getReceiverId())
-            .orElseThrow(() -> new RuntimeException("Receiver not found"));
+        User receiver = userRepository.findById(dto.getReceiverId())
+                .orElseThrow(() -> new RuntimeException("Receiver not found"));
 
-    Notification notification = Notification.builder()
-            .type(dto.getType())
-            .message(dto.getMessage())
-            .sender(sender)
-            .receiver(receiver)
-            .isRead(false)
-            .build();
+        Notification notification = Notification.builder()
+                .type(dto.getType())
+                .message(dto.getMessage())
+                .sender(sender)
+                .receiver(receiver)
+                .isRead(false)
+                .build();
 
-    notificationRepository.save(notification);
+        return notificationRepository.save(notification);
+    }
 
-    // Envoi via WebSocket uniquement des données utiles
-    messagingTemplate.convertAndSend(
-            "/topic/notifications/" + receiver.getId(),
-            dto
-    );
+    /**
+     * Envoie une notification au client via WebSocket.
+     */
+    public void sendNotification(NotificationDTO dto) {
+        messagingTemplate.convertAndSend(
+                "/topic/notifications/" + dto.getReceiverId(),
+                dto
+        );
+    }
+
+    /**
+     * Utilitaire : Enregistre + Envoie.
+     */
+    @Transactional
+    public void notify(NotificationDTO dto) {
+        saveNotification(dto);
+        sendNotification(dto);
+    }
+
+    public List<Notification> fetchNotifications(Long receiverId) {
+        return notificationRepository.findByReceiverId(receiverId);
+    }
+
+    @Transactional
+public void markAsRead(Long notificationId) {
+    Notification notification = notificationRepository.findById(notificationId)
+            .orElseThrow(() -> new RuntimeException("Notification not found"));
+
+    if (!notification.isRead()) {
+        notification.setRead(true);
+        notificationRepository.save(notification);
+    }
 }
-
 }

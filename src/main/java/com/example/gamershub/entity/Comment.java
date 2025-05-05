@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.example.gamershub.dto.FriendDTO;

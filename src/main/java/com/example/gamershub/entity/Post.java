@@ -38,8 +38,9 @@ public class Post {
     @Transient
     private int likeCount;
 
-    @Transient
-    private int commentCount;
+    @Column(name = "comments_count", nullable = false, columnDefinition = "int default 0")
+    private int commentCount = 0;
+
 
     @Transient
     private List<FriendDTO> usersWhoLiked;
@@ -53,6 +54,8 @@ public class Post {
     public Post(String description, String urlMedia) {
         this.description = description;
         this.urlMedia = urlMedia;
+        this.commentCount = 0;  // Initialisation du nombre de commentaires à 0
+
     }
 
     // Getters and Setters

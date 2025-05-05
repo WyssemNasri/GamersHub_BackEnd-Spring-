@@ -2,9 +2,12 @@ package com.example.gamershub.Services;
 
 import com.example.gamershub.Respositroys.FriendRequestRepository;
 import com.example.gamershub.Respositroys.FriendshipRepository;
+import com.example.gamershub.Respositroys.NotificationRepository;
+import com.example.gamershub.Respositroys.UserRepository;
 import com.example.gamershub.dto.NotificationDTO;
 import com.example.gamershub.entity.FriendRequest;
 import com.example.gamershub.entity.Friendship;
+import com.example.gamershub.entity.Notification;
 import com.example.gamershub.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,13 +21,17 @@ public class FriendRequestService {
     private FriendshipRepository friendshipRepository;
     @Autowired
     private NotificationService notificationService;
-
+    @Autowired 
+    private UserRepository userRepository ; 
+    @Autowired
+    private NotificationRepository notificationRepository ; 
     @Autowired
     private final FriendRequestRepository friendRequestRepository;
 
     public FriendRequestService(FriendRequestRepository friendRequestRepository) {
         this.friendRequestRepository = friendRequestRepository;
     }
+
 
 
     //fonction pour envoyer une demande d'ami
@@ -34,9 +41,26 @@ public class FriendRequestService {
         if (existingRequest.isPresent()) {
             throw new IllegalStateException("Friend request already exists");
         }
+    
         FriendRequest friendRequest = new FriendRequest(sender, receiver, FriendRequest.RequestStatus.PENDING);
-        return friendRequestRepository.save(friendRequest);
+        FriendRequest savedRequest = friendRequestRepository.save(friendRequest);
+    
+        // Création de l'objet NotificationDTO
+        NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setSenderId(sender.getId());
+        notificationDTO.setReceiverId(receiver.getId());
+        notificationDTO.setMessage( userRepository.findById(sender.getId()).getFirstName() +userRepository.findById(sender.getId()).getLastName() + " vous a envoyé une demande d'ami.");
+        notificationDTO.setType("FriendRequestSent");
+    
+        // Étape 1 : Enregistrer la notification dans la base de données
+        notificationService.saveNotification(notificationDTO);
+    
+        // Étape 2 : Envoyer la notification via WebSocket
+        notificationService.sendNotification(notificationDTO);
+    
+        return savedRequest;
     }
+    
 
     //fonction pour obtenir les demandes d'ami envoyées
     public List<FriendRequest> getSentFriendRequests(User sender) {
@@ -63,7 +87,6 @@ public class FriendRequestService {
             throw new IllegalStateException("Friend request is already processed");
         }
     
-        // Mettre à jour le statut de la demande d'ami
         request.setStatus(FriendRequest.RequestStatus.ACCEPTED);
         friendRequestRepository.save(request);
     
@@ -76,31 +99,21 @@ public class FriendRequestService {
         // Enregistrer l'amitié dans la table Friendship
         Friendship friendship = new Friendship(request.getSender(), request.getReceiver());
         friendshipRepository.save(friendship);
-
+    
+        // 🔔 Créer et enregistrer une notification pour le sender (celui qui a envoyé la demande)
+        NotificationDTO notificationDTO = new NotificationDTO();
+        notificationDTO.setSenderId(request.getReceiver().getId()); // celui qui accepte devient l'émetteur de la notif
+        notificationDTO.setReceiverId(request.getSender().getId()); // celui qui a envoyé reçoit la notif
+        notificationDTO.setMessage(request.getReceiver().getFirstName() + " " + request.getReceiver().getLastName() + " a accepté votre demande d'ami.");
+        notificationDTO.setType("FriendRequestAccepted");
+    
+        // Enregistrement + Envoi WebSocket
+        notificationService.saveNotification(notificationDTO);
+        notificationService.sendNotification(notificationDTO);
     
         return request;
     }
     
-    private void createFriendRequestNotification(FriendRequest request) {
-        String senderName = request.getSender().getFirstName(); // Récupère le prénom de l'utilisateur qui a envoyé la demande
-        String receiverName = request.getReceiver().getFirstName(); // Récupère le prénom de l'utilisateur qui accepte la demande
-    
-        // Créer une notification (exemple)
-        NotificationDTO notification = new NotificationDTO();
-        notification.setSenderUsername(senderName);
-        notification.setReceiverUsername(receiverName);
-        notification.setMessage(receiverName + " a accepté votre demande d'ami");
-        notification.setType("FriendRequestAccepted");
-    
-        // Appeler ton service de notification pour envoyer la notification
-        notificationService.sendNotification(notification);
-    }
-    
-
-
-
-
-
     // Refuser une demande d'ami
     public FriendRequest rejectFriendRequest(Long requestId) {
         Optional<FriendRequest> requestOpt = friendRequestRepository.findById(requestId);

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -32,5 +34,12 @@ public class Message {
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now();
+    }
+
+    public Long getsenderid(){
+        return this.sender.getId() ;
+    }
+    public Long getreceverid(){
+        return this.receiver.getId() ;
     }
 }
