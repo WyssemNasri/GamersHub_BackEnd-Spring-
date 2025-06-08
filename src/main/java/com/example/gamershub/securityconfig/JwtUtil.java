@@ -23,7 +23,6 @@ public class JwtUtil {
     }
 
 
-    //fonction pour genérer token avec email 
     public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
@@ -33,7 +32,6 @@ public class JwtUtil {
                 .compact();
     }
 
-    //fonction pour extract id de l'utilisateur avec token 
     public Long extractId(String token) {
         try {
             Claims claims = Jwts.parserBuilder()

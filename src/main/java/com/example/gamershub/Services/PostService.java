@@ -13,7 +13,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class PostService {
 
@@ -49,7 +47,7 @@ public class PostService {
             String textJson = "{\"message\": \"" + description.replace("\"", "\\\"") + "\"}";
             HttpEntity<String> textRequest = new HttpEntity<>(textJson, textHeaders);
     
-            ResponseEntity<Map> textResponse = restTemplate.postForEntity("/predict/image", textRequest, Map.class);
+            ResponseEntity<Map> textResponse = restTemplate.postForEntity("http://localhost:5001/predict/text", textRequest, Map.class);
             String textPrediction = (String) textResponse.getBody().get("prediction");
     
             isTextSafe = !textPrediction.equalsIgnoreCase("bad");

@@ -54,7 +54,7 @@ public class Post {
     public Post(String description, String urlMedia) {
         this.description = description;
         this.urlMedia = urlMedia;
-        this.commentCount = 0;  // Initialisation du nombre de commentaires à 0
+        this.commentCount = 0; 
 
     }
 

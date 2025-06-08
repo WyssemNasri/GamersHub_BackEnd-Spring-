@@ -45,7 +45,7 @@ public class CommentService {
         Comment comment = new Comment(user, post, commentRequestDTO.getContent());
         commentRepository.save(comment);
 
-        if (user.getId() != post.getUser().getId()) { // Use != for comparing primitive long values
+        if (user.getId() != post.getUser().getId()) { 
             NotificationDTO notificationDTO = new NotificationDTO();
             notificationDTO.setSenderId(user.getId());
             notificationDTO.setReceiverId(post.getUser().getId());
